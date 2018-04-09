@@ -11,7 +11,8 @@ $project = $_POST['pn'];
 $version = $_POST['ver'];
 
 $outJson = "";
-$lineas = explode("\n",$files);
+$lineas = str_replace("\r",'',$files);
+$lineas = explode("\n",$lineas);
 foreach($lineas as $data){
 	$temp = explode('->',$data);
 	$outJson=$outJson."{idArchivo:'$temp[0]',nombre:'$temp[1]'},";
@@ -24,7 +25,7 @@ $keyspace  = 'github';
 $session   = $cluster->connect($keyspace);        // create session, optionally scoped to a keyspace
 
 $statement = new Cassandra\SimpleStatement("SELECT * FROM proyecto where idProyecto='$project' and owner='$owner' and branch='$branch';");
-
+echo "SELECT * FROM proyecto where idProyecto='$project' and owner='$owner' and branch='$branch';";
 $result    = $session->execute($statement);
 if($result->count() == 0){
 		$session->execute("insert into proyecto(idProyecto, owner,suscriptores,branch,secuencia,parentbranch) values
