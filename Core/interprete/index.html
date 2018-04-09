@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Input</title>
+    <link href="css/jquery.terminal-src.css" rel="stylesheet"/>
+    <script src="https://rawgit.com/cvan/keyboardevent-key-polyfill/master/index.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="dialog.js"></script>
+    <link href="dialog.css" rel="stylesheet"/>
+    <script src="js/jquery.terminal-src.js"></script>
+    <style>
+     .dialog {
+         --size: 1.5;
+     }
+    </style>
+    <script>
+     // for browsers that don't support key property
+		var usuario = '';
+     keyboardeventKeyPolyfill.polyfill();
+     $(function() {
+         $('body').dialog(function(input) {
+			 var words = input.split(' ');
+		
+		
+		
+		
+//Bloque de crear usuario, muy sencillo
+			 if(words[0] == 'createuser' && words.length == 3){
+			 jQuery.ajax({
+
+			         url: '../createuser.php',
+			         data: {'user':words[1],'pass':words[2]},
+			         dataType: 'JSON',
+			         type: 'POST',
+			         success:function(data){
+						 if(data.status == 'success'){
+						     alert("La creación fue exitosa!");
+						  }else{
+						     alert(data.status);
+						  }
+			         }
+
+			     });
+			 
+			
+         }else  if(words[0] == 'login' && words.length == 3){
+			 jQuery.ajax({
+
+			         url: '../login.php',
+			         data: {'user':words[1],'pass':words[2]},
+			         dataType: 'JSON',
+			         type: 'POST',
+			         success:function(data){
+						 if(data.status == 'success'){
+						     alert("Se inicio sesion exitosamente!");
+							 usuario = words[1];
+						  }else{
+						     alert(data.status);
+						  }
+			         }
+
+			     });
+			 
+			
+         }else  if(words[0] == 'upload' && words.length == 3){
+			 jQuery.ajax({
+
+			         url: '../insertFile.php',
+			         data: {'file':words[1],'branch':words[2]},
+			         dataType: 'JSON',
+			         type: 'POST',
+			         success:function(data){
+						     alert(data.status);
+			         }
+
+			     });
+			 
+			
+         }else  if(words[0] == 'createproject' && words.length == 3){
+			 
+			 if(usuario != ''){
+			 
+			 jQuery.ajax({
+
+			         url: '../createProject.php',
+			         data: {'nombreProyecto':words[1],'tipo':words[2],'user':usuario},
+			         dataType: 'JSON',
+			         type: 'POST',
+			         success:function(data){
+						 if(data.status == 'success'){
+						     alert("Se creo exitosamente");
+						  }else{
+						     alert(data.status);
+						  }
+			         }
+
+			     });
+			 }else{alert("No has iniciado sesión");}
+			 
+			
+         }
+	 
+	 
+	 
+	 
+	 
+	 }, {
+             cols: 110,
+             rows: 100,
+             message: 'Instrucción',
+             title: ''
+         });
+     });
+    </script>
+  </head>
+  <body></body>
+</html>
