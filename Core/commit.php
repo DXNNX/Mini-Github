@@ -1,14 +1,35 @@
 <?php
 error_reporting(E_ALL);
+include 'connMongo.php';
  // I don't know if you need to wrap the 1 inside of double quotes.
  ini_set("display_startup_errors",1);
  ini_set("display_errors",1);
-$file = $_POST['file'];
+ 
+ $branch = $_POST['bn'];
+ if(isset($_FILES['filePath'])){
+ 	$file = $_FILES['filePath']['tmp_name'];
+	$conn = new MongoDB\Driver\Manager("mongodb://localhost:27017");
+	$insert = array(
+		"nombre" => $_FILES['filePath']['name'],
+		"archivo" => new MongoDB\BSON\Binary(file_get_contents($file),0),
+		"fecha" => getdate(),
+		"tipo" => $_FILES['filePath']['type']
+		
+	);
+	$bulk = new MongoDB\Driver\BulkWrite;
+	$file = $_FILES['filePath']['name'];
+	$doc = $bulk->insert($insert);
+	$result = $conn->executeBulkWrite('github.archivo', $bulk);
+
+ }else{
+	 $file = $_POST['file'];
+	 $doc = $_POST['did'];
+}
 $branch = $_POST['bn'];
 $user = $_POST['user'];
 $project = $_POST['pn'];
 $version = $_POST['ver'];
-$doc = $_POST['did'];
+
 
 $cluster   = Cassandra::cluster()                 // connects to localhost by default
                  ->build();
