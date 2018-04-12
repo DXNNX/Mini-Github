@@ -68,14 +68,13 @@ $cluster   = Cassandra::cluster()->build();
 $keyspace  = 'github';
 $session   = $cluster->connect($keyspace);        // create session, optionally scoped to a keyspace
 
-$statement = new Cassandra\SimpleStatement("SELECT * FROM archivoHist where projectname='$project' and branchname='$branch' and docname='$file'");
-
+$statement = new Cassandra\SimpleStatement("SELECT * FROM archivoHist where projectname='$project' and branchname='$branch' and docname='$file' and owner='$user'");
 $result= $session->execute($statement);
 if($result->count() == 0){
 		$session->execute("insert into archivoHist(projectname,branchname,docname,owner,historial) values ('$project','$branch','$file','$user',[{idArchivo:'$doc',version:'$version',comentario:'$comentario',usuario:'$user'}]);");
 
 }else{
-	$session->execute("UPDATE github.archivohist SET historial=historial+[{idArchivo:'$doc',version:'$version',comentario:'$comentario',usuario:'$user'}] where projectname='$project' and branchname='$branch' and docname='$file'");
+	$session->execute("UPDATE github.archivohist SET historial=historial+[{idArchivo:'$doc',version:'$version',comentario:'$comentario',usuario:'$user'}] where projectname='$project' and branchname='$branch' and docname='$file' and owner='$user'");
 }
 
 $statement = new Cassandra\SimpleStatement("SELECT secuencia FROM proyecto where idProyecto='$project' and owner='$user' and branch='$branch';");
