@@ -5,7 +5,7 @@ error_reporting(E_ALL | E_STRICT);
  ini_set("display_errors",'On');
  
 $branch = $_POST['bn'];
-$newbranch = $_POST['nb'];
+$newbranch = $_POST['newbranch'];
 $owner = $_POST['user'];
 $project = $_POST['pn'];
 
@@ -30,11 +30,5 @@ if($result->count() != 0){
 	$session->execute("insert into proyecto(idProyecto, owner,suscriptores,branch,secuencia,parentbranch) values('$project','$owner',[],'$newbranch',$js,'$branch');");
 
 }
-/*	
-$result = $session->execute("SELECT * FROM github.proyecto");
 
-foreach ($result as $row) {
-  var_dump($row);
-}
-*/
 ?>

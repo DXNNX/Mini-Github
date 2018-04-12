@@ -23,7 +23,6 @@ function getArchStructOld($lista,$file){
 	if ($i == $len - 1) {
 		$l = $arch->get(3);
 	    foreach($l as $arch2){
-			echo $arch2->get('nombre');
 	   		 if(strcmp($arch2->get('nombre'),$file)==0){
 			 
 	   		 	$arch2->set('idarchivo',$doc."");
@@ -84,7 +83,11 @@ $result    = $session->execute($statement);
 $records = $result->current()['secuencia']->values();
 $JSList = getArchStructOld($records,$file);
 if($addLast){
-$JSList = substr($JSList,0,-2).','."{idarchivo:'".$doc."',"."nombre:'".$file."'}])";
+	if(strcmp(substr($JSList, -3),"[])")==0){
+			$JSList = substr($JSList,0,-2)."{idarchivo:'".$doc."',"."nombre:'".$file."'}])";
+	}else{
+		$JSList = substr($JSList,0,-2).','."{idarchivo:'".$doc."',"."nombre:'".$file."'}])";
+	}
 }
 
 $session->execute("UPDATE github.proyecto SET secuencia=[$JSList] where idProyecto='$project' and owner='$user' and branch='$branch';");

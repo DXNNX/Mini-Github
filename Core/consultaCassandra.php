@@ -24,4 +24,24 @@ foreach ($result as $row) {
 }
 return array_filter($out);
 }
+function consultaPBMerge($owner){
+$cluster   = Cassandra::cluster()                 // connects to localhost by default
+                 ->build();
+$keyspace  = 'github';
+$session   = $cluster->connect($keyspace);        // create session, optionally scoped to a keyspace
+
+$statement = new Cassandra\SimpleStatement("SELECT * FROM proyecto;");	
+$result = $session->execute("SELECT idproyecto,branch,owner,parentbranch FROM github.proyecto");
+
+foreach ($result as $row) {
+	
+	$out[] = array();
+	if($row['owner'] == 'dxnnx'){
+		array_push($out,array('idproyecto'=>$row['idproyecto'],'branch'=>$row['branch'],'parentbranch'=>$row['parentbranch'],));
+		
+	}
+}
+return array_filter($out);
+}
+
 ?>

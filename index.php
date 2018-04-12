@@ -1,4 +1,5 @@
 <?php
+$title="Inicio";
 	include ('ui/header.php'); 
 ?>
 							Hola
