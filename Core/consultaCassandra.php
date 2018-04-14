@@ -3,9 +3,28 @@ error_reporting(E_ALL | E_STRICT);
  // I don't know if you need to wrap the 1 inside of double quotes.
  ini_set("display_startup_errors",'On');
  ini_set("display_errors",'On');
- 
+ include 'connMysql.php';
  
 function consultaPB($owner){
+$cluster   = Cassandra::cluster()                 // connects to localhost by default
+                 ->build();
+$keyspace  = 'github';
+$session   = $cluster->connect($keyspace);        // create session, optionally scoped to a keyspace
+
+$result = $session->execute("SELECT idproyecto,branch,owner FROM github.proyecto");
+
+foreach ($result as $row) {
+	
+	$out[] = array();
+	if(strcmp($row['owner'], $owner)==0){
+		array_push($out,array('idproyecto'=>$row['idproyecto'],'branch'=>$row['branch'],'owner'=>$row['owner']));
+		
+	}
+}
+return array_filter($out);
+}
+
+function consultaPBFind($owner){
 $cluster   = Cassandra::cluster()                 // connects to localhost by default
                  ->build();
 $keyspace  = 'github';
@@ -15,15 +34,23 @@ $statement = new Cassandra\SimpleStatement("SELECT * FROM proyecto;");
 $result = $session->execute("SELECT idproyecto,branch,owner FROM github.proyecto");
 
 foreach ($result as $row) {
-	
+	$conn = OpenCon();
+	$query = "select * from github.proyecto  where nombreproyecto='{$row['idproyecto']}' and user='{$row['owner']}' and tipo=0";
+	echo $query;
 	$out[] = array();
-	if($row['owner'] == 'dxnnx'){
-		array_push($out,array('idproyecto'=>$row['idproyecto'],'branch'=>$row['branch']));
+	$result = $conn->query($query);
+	if ($result->num_rows > 0) {
+		if($row['owner'] != $owner){
+			array_push($out,array('idproyecto'=>$row['idproyecto'],'branch'=>$row['branch'],'owner'=>$row['owner']));
 		
+		}
 	}
 }
+print($out);
+
 return array_filter($out);
 }
+
 function consultaPBMerge($owner){
 $cluster   = Cassandra::cluster()                 // connects to localhost by default
                  ->build();
@@ -36,7 +63,7 @@ $result = $session->execute("SELECT idproyecto,branch,owner,parentbranch FROM gi
 foreach ($result as $row) {
 	
 	$out[] = array();
-	if($row['owner'] == 'dxnnx'){
+	if($row['owner'] == $owner){
 		array_push($out,array('idproyecto'=>$row['idproyecto'],'branch'=>$row['branch'],'parentbranch'=>$row['parentbranch'],));
 		
 	}
@@ -136,23 +163,6 @@ foreach($result[0]['historial']->values() as $file){
 if(isset($_POST['project']) && isset($_POST['branch']) && isset($_POST['user']) && isset($_POST['callarchivov']) && isset($_POST['archivo'])){
 	consultaVFiles($_POST['project'],$_POST['branch'],$_POST['user'],$_POST['archivo']);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

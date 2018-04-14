@@ -7,10 +7,11 @@ $np = $_POST['np'];
 $tipo = $_POST['tipo'];
 $user = $_POST['user'];
 $branch = $_POST['branch'];
+$tags = $_POST['tags'];
 $version = $_POST['version'];
 $comentario = $_POST['comentario'];
 
-if(mysqli_query($conn,"INSERT INTO proyecto(nombreProyecto,user,tipo)  VALUES ('$np','$user',$tipo)")){
+if(mysqli_query($conn,"INSERT INTO proyecto(nombreProyecto,user,tipo,tags)  VALUES ('$np','$user',$tipo,'$tags')")){
 	    $msg['status'] = 'success';  
 }else {
 	    $msg['status'] = mysqli_error($conn);  

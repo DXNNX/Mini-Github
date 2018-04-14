@@ -30,7 +30,7 @@ include ('core/consultaCassandra.php');
 											</div>
 											<div class="12u$">
 												<ul class="actions">
-													<li><input type="submit" value="Crear Branch" class="special" /></li>
+													<li><input type="submit" value="Merge Branch" class="special" /></li>
 													<li><input type="reset" id="reset" value="Reset" /></li>
 												</ul>
 											</div>
@@ -70,7 +70,7 @@ include ('core/consultaCassandra.php');
             type: 'POST'
             });
 			alert("Merge Realizado");
-			window.location.replace('<?php echo $_SERVER['PHP_SELF']; ?>');
+			//window.location.replace('<?php echo $_SERVER['PHP_SELF']; ?>');
 	}
 
 /*

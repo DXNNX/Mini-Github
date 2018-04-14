@@ -11,9 +11,9 @@ $title="Ver Proyecto";
 													<select name="pb" id="pb">
 														<?php
 														$counter = 1;
-														$rows = consultaPB($guser);
+														$rows = consultaPBFind($guser);
 														foreach($rows as $row){
-															echo "<option value='$counter'>{$row['idproyecto']}->{$row['branch']}</option>";
+															echo "<option value='$counter'>{$row['owner']}->{$row['idproyecto']}->{$row['branch']}</option>";
 																	print("\n");
 															$counter+=1;
 															echo "";
@@ -45,7 +45,7 @@ $title="Ver Proyecto";
 		echo 'var items = [';
 		$strout = "";
 		foreach($rows as $row){
-			$strout=$strout."['".$row['idproyecto']."','".$row['branch']."'],";
+			$strout=$strout."['".$row['idproyecto']."','".$row['branch']."','".$row['owner']."'],";
 		}
 		echo substr($strout,0,-1);
 		echo "];";
@@ -58,19 +58,18 @@ $title="Ver Proyecto";
 		rama = items[document.getElementById('pb').selectedIndex][1];
 		form_data.append("pn",items[document.getElementById('pb').selectedIndex][0]);
 		form_data.append("bn",items[document.getElementById('pb').selectedIndex][1]);
-		form_data.append("user", '<?php echo $guser;?>');
+		form_data.append("user", items[document.getElementById('pb').selectedIndex][2]);
 		
    	 jQuery.ajax({
 
             url: 'core/listaproyectos.php',
             data: form_data,
 		 	cache: false,
-
 			contentType: false,
          	processData: false,
             type: 'POST',
          	success:function(data){
-				$('#lista').html('<h2>'+proyecto+'</h2>'+data.status);
+				$('#lista').html(data.status);
 				$("#mostrar").empty();
          	}
             });}
@@ -81,7 +80,6 @@ $title="Ver Proyecto";
 				form_data.append("pn",proyecto);
 				form_data.append("bn",rama);
 				form_data.append("file",selected);
-				form_data.append("user", '<?php echo $guser;?>');
 				$("#mostrar").empty();
 		   	 jQuery.ajax({
 
@@ -100,5 +98,4 @@ $title="Ver Proyecto";
 	
 */
 </script>
-<?php include ('ui/footer.php'); 
-?>
+<?php include ('ui/footer.php'); ?>

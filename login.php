@@ -32,7 +32,7 @@ if(isset($_POST['user'])){
 														echo "<p style='color:red'>Usuario y/o Contraseña son incorrectos</p>";
 													}
 													?>
-													<li><input type="submit" value="Registrarse" class="special" /></li>
+													<li><input type="submit" value="Iniciar Sesión" class="special" /></li>
 													<li><input type="reset" value="Reset" /></li>
 												</ul>
 											</div>
